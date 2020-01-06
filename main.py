@@ -1,6 +1,7 @@
 import sys
 
 variablevalues = {}
+answer = {}
 
 def testfunction(a, b):
     lol = [1,2,3,4,5]
@@ -32,8 +33,7 @@ def trace_varchanges(frame, event, args):
                 if i not in variablevalues:
                     line_no = frame.f_lineno-1
                     func_name = code.co_name
-                    if(func_name == 'testfunction'):
-                        print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
+                    print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
                     variablevalues[i] = []
                     for j in localvars[i]:
                         variablevalues[i].append(j)
@@ -43,11 +43,9 @@ def trace_varchanges(frame, event, args):
                         func_name = code.co_name
                         for j in range(len(variablevalues[i])):
                             if(variablevalues[i][j] != localvars[i][j]):        
-                                if(func_name == 'testfunction'):
-                                    print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
+                                print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
                         for j in range(len(variablevalues[i]), len(localvars[i])):
-                            if(func_name == 'testfunction'):
-                                    print("In line %s of the %s function in the file %s, the value %s has been added to %s" % (line_no, func_name, code.co_filename, localvars[i][j], i))
+                                print("In line %s of the %s function in the file %s, the value %s has been added to %s" % (line_no, func_name, code.co_filename, localvars[i][j], i))
                         variablevalues[i] = []
                     for j in localvars[i]:
                         variablevalues[i].append(j)
@@ -56,8 +54,7 @@ def trace_varchanges(frame, event, args):
                         func_name = code.co_name
                         for j in range(min(len(variablevalues[i]), len(localvars[i]))):
                             if(variablevalues[i][j] != localvars[i][j]):        
-                                if(func_name == 'testfunction'):
-                                    print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
+                                print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
                         variablevalues[i] = []
                     for j in localvars[i]:
                         variablevalues[i].append(j)
@@ -65,16 +62,14 @@ def trace_varchanges(frame, event, args):
                 if i not in variablevalues:
                     line_no = frame.f_lineno-1
                     func_name = code.co_name
-                    if(func_name == 'testfunction'):
-                        print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
+                    print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
                     variablevalues[i] = localvars[i]
 
                 else:
                     if(localvars[i] != variablevalues[i]):
                         line_no = frame.f_lineno-1
                         func_name = code.co_name
-                        if(func_name == 'testfunction'):
-                            print("In line %s of the %s function in the file %s, the variable %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, i, variablevalues[i], localvars[i]))
+                        print("In line %s of the %s function in the file %s, the variable %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, i, variablevalues[i], localvars[i]))
                         variablevalues[i] = localvars[i]
 
 
