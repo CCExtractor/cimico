@@ -10,13 +10,13 @@ answerother = {}
 def testfunction(a, b):
     test = "sfwef"
     lol = [1,2,3,4,5]
-    cnt = set([2,4,5])
+    cnt = {3:4, 5:6}
     a += 1
     b += 5
     lol.append(6)
     lol.append(7)
     lol[3] = 6
-    cnt.add(3)
+    cnt[3] = 7
     lol.remove(5)
     test += "e"
     c = abs(a - b)
@@ -80,10 +80,13 @@ def trace_varchanges(frame, event, args):
                     if(isinstance(localvars[i], int)):
                         answerint[i] = [line_no, localvars[i], localvars[i], [[line_no, localvars[i]]]]
                     else:
-                        answerother[i] = [line_no, type(localvars[i]), [[line_no, localvars[i]]]]
+                        if(isinstance(localvars[i], tuple) or isinstance(localvars[i], dict) or isinstance(localvars[i], set)):
+                            temp = localvars[i].copy()
+                        else:
+                            temp = localvars[i]
+                        answerother[i] = [line_no, type(localvars[i]), [[line_no, temp]]]
                     if(isinstance(localvars[i], tuple) or isinstance(localvars[i], dict) or isinstance(localvars[i], set)):
-                        variablevalues[i] = dict(localvars[i])
-                        print("F")
+                        variablevalues[i] = localvars[i].copy()
                     else:
                         variablevalues[i] = localvars[i]
                 else:
@@ -96,9 +99,14 @@ def trace_varchanges(frame, event, args):
                             answerint[i][2] = max(answerint[i][2], localvars[i])
                             answerint[i][3].append([line_no, localvars[i]])
                         else:
-                            answerother[i][2].append([line_no, localvars[i]])
+                            if(isinstance(localvars[i], tuple) or isinstance(localvars[i], dict) or isinstance(localvars[i], set)):
+                                temp = localvars[i].copy()
+                            else:
+                                temp = localvars[i]
+                            answerother[i][2].append([line_no, temp])
+                            
                         if(isinstance(localvars[i], tuple) or isinstance(localvars[i], dict) or isinstance(localvars[i], set)):
-                            variablevalues[i] = dict(localvars[i])
+                            variablevalues[i] = localvars[i].copy()
                         else:
                             variablevalues[i] = localvars[i]
 
