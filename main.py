@@ -1,13 +1,19 @@
 import sys
 import copy
+import time
+import timeit
+
 variablevalues = {}
 answerint = {}
 answerother = {}
+aggtimeperline = {}
+nooftimesperline = {}
 
-# answerother[var] = [initialize, type, [[line, change], [line2, change2]]]
-# answerint[var] = [initialize, min, max]
 
-def testfunction(a, b):
+def testfunction(a, b, curr):
+    if(curr == 3):
+        return a+b
+    curr+=1
     test = "sfwef"
     lol = [1,2,3,4,5]
     cnt = {3:4, 5:6}
@@ -23,7 +29,7 @@ def testfunction(a, b):
     d = a * b * c
     e = a + b + d + c
     test += "gsagar"
-    return e
+    return e + testfunction(d, e, curr)
 
 
 
@@ -31,12 +37,18 @@ def trace_main(frame, event, args):
     if(event != 'call'):
         return 
     return trace_varchanges
+print("----------------------------------------------")
+print("             STARTING FUNCTION                ")
+print("----------------------------------------------")
 
 def trace_varchanges(frame, event, args):
     if event != "line":
         return 
     code = frame.f_code
     localvars = frame.f_locals
+    line_no = frame.f_lineno-1
+    print("Starting line %s ..." % (line_no))
+    start_time = time.time()
     for i in code.co_varnames:
         if i in localvars:
             if(isinstance(localvars[i], list)):
@@ -109,12 +121,32 @@ def trace_varchanges(frame, event, args):
                             variablevalues[i] = localvars[i].copy()
                         else:
                             variablevalues[i] = localvars[i]
+    line_no = frame.f_lineno-1
+    if line_no not in nooftimesperline:
+        nooftimesperline[line_no] = 1
+    else:
+        nooftimesperline[line_no]+=1
+    spent = time.time() - start_time
+    if line_no not in aggtimeperline:
+        aggtimeperline[line_no] = spent
+    else:
+        aggtimeperline[line_no]+=spent
+    print("Time spent on this line is {:f} seconds.".format(spent))
+    if(nooftimesperline[line_no] > 1):
+        print("This line has been executed %s times before."%(nooftimesperline[line_no]))
+    else:
+        print("This line has been executed %s time before."%(nooftimesperline[line_no]))
+    print("The aggregate time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no]))
+    print("The average time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no]/nooftimesperline[line_no]))
+    print("----------------------------------------------")
+
+    
 
 
+stime = time.time()
 sys.settrace(trace_main)
-testfunction(3, 4)
+testfunction(3, 4, 0)
 
-print("----------------------------------------------")
 print("                     REPORT                   ")
 print("----------------------------------------------")
 for i in answerint:
@@ -141,3 +173,9 @@ for i in answerother:
         lastval = answerother[i][2][j][1]
     print("The final value of the variable is " + str(lastval)  + ".")
     print("----------------------------------------------")
+
+print("Program executed in {:f} seconds.".format(time.time()-stime))
+print("----------------------------------------------")
+for i in nooftimesperline:
+    print("Line %s was executed %s times" % (i, nooftimesperline[i]))
+print("----------------------------------------------")
