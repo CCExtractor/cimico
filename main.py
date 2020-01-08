@@ -3,6 +3,7 @@ import copy
 import time
 import timeit
 import importlib
+import writetojson
 
 variablevalues = {}
 answerint = {}
@@ -10,53 +11,45 @@ answerother = {}
 aggtimeperline = {}
 nooftimesperline = {}
 
-
-def testfunction(a, b, curr):
-    if(curr == 3):
-        return a+b
-    curr+=1
-    test = "sfwef"
-    lol = [1,2,3,4,5]
-    cnt = {3:4, 5:6}
-    a += 1
-    b += 5
-    lol.append(6)
-    lol.append(7)
-    lol[3] = 6
-    cnt[3] = 7
-    lol.remove(5)
-    test += "e"
-    c = abs(a - b)
-    d = a * b * c
-    e = a + b + d + c
-    test += "gsagar"
-    return e + testfunction(d, e, curr)
-
-
+step = 0
 
 def trace_main(frame, event, args):
     if(event != 'call'):
         return 
     return trace_varchanges
+
+
+print("----------------------------------------------")
+print("                 TAKING INPUT                 ")
+print("----------------------------------------------")
+pth2 = input("Enter the name of the file you want to debug: ")
+fname = input("Enter the name of the function you want to debug: ")
+pth = pth2.replace(".py", "")
+
 print("----------------------------------------------")
 print("             STARTING FUNCTION                ")
 print("----------------------------------------------")
 
 def trace_varchanges(frame, event, args):
+    global step
     if event != "line":
-        return 
+        return
     code = frame.f_code
     localvars = frame.f_locals
     line_no = frame.f_lineno-1
-    print("Starting line %s ..." % (line_no))
+    arr = []
+    strt = "Starting line %s ..." % (line_no)
+    arr.append(strt)
     start_time = time.time()
+    step+=1
     for i in code.co_varnames:
         if i in localvars:
             if(isinstance(localvars[i], list)):
                 if i not in variablevalues:
                     line_no = frame.f_lineno-1
                     func_name = code.co_name
-                    print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
+                    varchanges = "In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i])
+                    arr.append(varchanges)
                     variablevalues[i] = []
                     variablevalues[i] = localvars[i][:]
                     answerother[i] = [line_no, type(localvars[i]), [[line_no, variablevalues[i]]]]
@@ -67,10 +60,12 @@ def trace_varchanges(frame, event, args):
                         func_name = code.co_name
                         for j in range(len(variablevalues[i])):
                             if(variablevalues[i][j] != localvars[i][j]):        
-                                print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
+                                varchanges = "In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j])
+                                arr.append(varchanges)
                                 changed = True
                         for j in range(len(variablevalues[i]), len(localvars[i])):
-                            print("In line %s of the %s function in the file %s, the value %s has been added to %s" % (line_no, func_name, code.co_filename, localvars[i][j], i))
+                            varchanges = "In line %s of the %s function in the file %s, the value %s has been added to %s" % (line_no, func_name, code.co_filename, localvars[i][j], i)
+                            arr.append(varchanges)
                             changed = True
                         variablevalues[i] = []
                         variablevalues[i] = localvars[i][:]
@@ -79,7 +74,8 @@ def trace_varchanges(frame, event, args):
                         func_name = code.co_name
                         for j in range(min(len(variablevalues[i]), len(localvars[i]))):
                             if(variablevalues[i][j] != localvars[i][j]):        
-                                print("In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j]))
+                                varchanges = "In line %s of the %s function in the file %s, the index %s of list %s has changed value from %s to %s" % (line_no, func_name, code.co_filename, j, i, variablevalues[i][j], localvars[i][j])
+                                arr.append(varchanges)
                                 changed = True
                         variablevalues[i] = []
                         variablevalues[i] = localvars[i][:]
@@ -89,7 +85,8 @@ def trace_varchanges(frame, event, args):
                 if i not in variablevalues:
                     line_no = frame.f_lineno-1
                     func_name = code.co_name
-                    print("In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i]))
+                    varchanges = "In line %s of the %s function in the file %s, the variable %s has been initialized to %s" % (line_no, func_name, code.co_filename,i, localvars[i])
+                    arr.append(varchanges)
                     if(isinstance(localvars[i], int)):
                         answerint[i] = [line_no, localvars[i], localvars[i], [[line_no, localvars[i]]]]
                     else:
@@ -106,7 +103,8 @@ def trace_varchanges(frame, event, args):
                     if(localvars[i] != variablevalues[i]):
                         line_no = frame.f_lineno-1
                         func_name = code.co_name
-                        print("In line %s of the %s function in the file %s, the variable %s has changed from %s to %s" % (line_no, func_name, code.co_filename, i, variablevalues[i], localvars[i]))
+                        varchanges = "In line %s of the %s function in the file %s, the variable %s has changed from %s to %s" % (line_no, func_name, code.co_filename, i, variablevalues[i], localvars[i])
+                        arr.append(varchanges)
                         if(isinstance(localvars[i], int)):
                             answerint[i][1] = min(answerint[i][1], localvars[i])
                             answerint[i][2] = max(answerint[i][2], localvars[i])
@@ -132,51 +130,99 @@ def trace_varchanges(frame, event, args):
         aggtimeperline[line_no] = spent
     else:
         aggtimeperline[line_no]+=spent
-    print("Time spent on this line is {:f} seconds.".format(spent))
+    varchanges = "Time spent on this line is {:f} seconds.".format(spent)
+    arr.append(varchanges)
     if(nooftimesperline[line_no] > 1):
-        print("This line has been executed %s times before."%(nooftimesperline[line_no]))
+        varchanges = "This line has been executed %s times before."%(nooftimesperline[line_no])
+        arr.append(varchanges)
     else:
-        print("This line has been executed %s time before."%(nooftimesperline[line_no]))
-    print("The aggregate time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no]))
-    print("The average time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no]/nooftimesperline[line_no]))
-    print("----------------------------------------------")
+        varchanges = "This line has been executed %s time before."%(nooftimesperline[line_no])
+        arr.append(varchanges)
+    varchanges = "The aggregate time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no])
+    arr.append(varchanges)
+    varchanges = "The average time spent on this line till now is {:f} seconds".format(aggtimeperline[line_no]/nooftimesperline[line_no])
+    arr.append(varchanges)
+    jsndta = {}
+    jsndta["timestamp"] = time.time()
+    jsndta["report"] = arr
+    writetojson.addtolines(jsndta, step)
+    
 
     
 
 
 stime = time.time()
+# add corner case
+modle = importlib.import_module(pth)
+func = getattr(modle, fname)
 sys.settrace(trace_main)
-testfunction(3, 4, 0)
+func(3, 5)
+# print(writetojson.lines)
 
-print("                     REPORT                   ")
-print("----------------------------------------------")
+# print("----------------------------------------------")
+# print("                     REPORT                   ")
+# print("----------------------------------------------")
+arr = []
 for i in answerint:
-    print("Tracing the variable " + i + " of type integer:-")
-    print("It was initialized on line " + str(answerint[i][0])  + ".")
-    print("It's value over the program ranges from " + str(answerint[i][1]) + " to " + str(answerint[i][1]) + ".")
+    arr = []
+    strval = "Tracing the variable " + i + " of type integer:-"
+    arr.append(strval)
+    strval = "It was initialized on line " + str(answerint[i][0])  + "."
+    arr.append(strval)
+    strval = "It's value over the program ranges from " + str(answerint[i][1]) + " to " + str(answerint[i][1]) + "."
+    arr.append(strval)
     lastval = answerint[i][3][0][1]
-    print("The initial value of the variable is " + str(lastval)  + ".")
+    strval = "The initial value of the variable is " + str(lastval)  + "."
+    arr.append(strval)
     for j in range(1, len(answerint[i][3])):
-        print("On line "+ str(answerint[i][3][j][0]) + ", the variable changed values from " + str(lastval) + " to " + str(answerint[i][3][j][1]) + ".")
+        strval = "On line "+ str(answerint[i][3][j][0]) + ", the variable changed values from " + str(lastval) + " to " + str(answerint[i][3][j][1]) + "."
+        arr.append(strval)
         lastval = answerint[i][3][j][1]
-    print("The final value of the variable is " + str(lastval)  + ".")
-    print("----------------------------------------------")
+    strval = "The final value of the variable is " + str(lastval)  + "."
+    arr.append(strval)
+    jsndta = {}
+    jsndta["timestamp"] = time.time()
+    jsndta["report"] = arr
+    writetojson.addtovars(jsndta, i)
+    
 
 for i in answerother:
+    arr = []
     typevar = str(answerother[i][1])[8:]
     typevar2 = str(typevar[::-1][2:])[::-1]
-    print("Tracing the variable " + i + " of type %s:-" % (typevar2))
-    print("It was initialized on line " + str(answerother[i][0])  + ".")
+    strval = "Tracing the variable " + i + " of type %s:-" % (typevar2)
+    arr.append(strval)
+    strval = "It was initialized on line " + str(answerother[i][0])  + "."
+    arr.append(strval)
     lastval = answerother[i][2][0][1]
-    print("The initial value of the variable is " + str(lastval)  + ".")
+    strval = "The initial value of the variable is " + str(lastval)  + "."
+    arr.append(strval)
     for j in range(1, len(answerother[i][2])):
-        print("On line "+ str(answerother[i][2][j][0]) + ", the variable changed from " + str(lastval) + " to " + str(answerother[i][2][j][1]) + ".")
+        strval = "On line "+ str(answerother[i][2][j][0]) + ", the variable changed from " + str(lastval) + " to " + str(answerother[i][2][j][1]) + "."
+        arr.append(strval)
         lastval = answerother[i][2][j][1]
-    print("The final value of the variable is " + str(lastval)  + ".")
-    print("----------------------------------------------")
+    strval = "The final value of the variable is " + str(lastval)  + "."
+    arr.append(strval)
+    jsndta = {}
+    jsndta["timestamp"] = time.time()
+    jsndta["report"] = arr
+    writetojson.addtovars(jsndta, i)
 
-print("Program executed in {:f} seconds.".format(time.time()-stime))
-print("----------------------------------------------")
+arr = []
+otherdta = "Program executed in {:f} seconds.".format(time.time()-stime)
+arr.append(otherdta)
 for i in nooftimesperline:
-    print("Line %s was executed %s times" % (i, nooftimesperline[i]))
-print("----------------------------------------------")
+    if( nooftimesperline[i] == 1):
+        otherdta = "Line %s was executed %s time" % (i, nooftimesperline[i])
+        arr.append(otherdta)
+    else: 
+        otherdta = "Line %s was executed %s times" % (i, nooftimesperline[i])
+        arr.append(otherdta)
+jsndta = {}
+jsndta["timestamp"] = time.time()
+jsndta["report"] = arr
+writetojson.addtoothers(jsndta)
+
+# print(writetojson.data)
+print(writetojson.variables)
+# print(writetojson.lines)
