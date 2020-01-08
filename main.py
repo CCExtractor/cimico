@@ -5,8 +5,7 @@ import timeit
 import importlib
 import writetojson
 import outputjson
-from inspect import signature
-import inspect
+from inspect import isfunction, getmembers
 
 variablevalues = {}
 answerint = {}
@@ -30,8 +29,15 @@ if pth2.find(".json") != -1:
     print("You entered a JSON file, reporting the data...")
     outputjson.main(pth2)
     exit()
+if pth2.find(".py") == -1:
+    print("Invalid file, breaking the program")
+    exit()
 fname = input("Enter the name of the function you want to debug: ")
 pth = pth2.replace(".py", "")
+modle = importlib.import_module(pth)
+if(not hasattr(modle, fname)):
+    print("Invalid input! Either wrong function name or wrong path!")
+    exit()
 
 print("----------------------------------------------")
 print("              RUNNING FUNCTION                ")
@@ -159,31 +165,8 @@ def trace_varchanges(frame, event, args):
 
 
 stime = time.time()
-# add corner case
-# take input for function from user
 modle = importlib.import_module(pth)
 func = getattr(modle, fname)
-sig = signature(func)
-ls = str(sig)
-ln = []
-crr = ""
-
-for i in ls:
-    if(i == '('):
-        crr = ""
-        continue
-    if(i == ')'):
-        ln.append(crr)
-        crr= ""
-        continue
-    if(i == ','):
-        ln.append(crr)
-        crr= ""
-    else:
-        crr+=i
-valln = []
-print("The function %s has %s arguements, please give input for each of them")
-
 sys.settrace(trace_main)
 func(3, 5, 0)
 sys.settrace(None)

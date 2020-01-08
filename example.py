@@ -1,4 +1,4 @@
-def main(y, x):
+def main(y, x, a):
     x += y
     y += x
     z = x * y
