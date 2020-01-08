@@ -12,4 +12,11 @@ def addtovars(jsnd, step):
 
 def addtoothers(jsnd):
     data["others"] = jsnd
-    
+
+def findata():
+    data["variables"] = variables
+    data["lines"] = lines
+
+def dumpjson():
+    with open('data.json', 'w') as fp:
+        json.dump(data, fp)

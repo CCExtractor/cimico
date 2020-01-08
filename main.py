@@ -4,6 +4,9 @@ import time
 import timeit
 import importlib
 import writetojson
+import outputjson
+from inspect import signature
+import inspect
 
 variablevalues = {}
 answerint = {}
@@ -23,11 +26,15 @@ print("----------------------------------------------")
 print("                 TAKING INPUT                 ")
 print("----------------------------------------------")
 pth2 = input("Enter the name of the file you want to debug: ")
+if pth2.find(".json") != -1:
+    print("You entered a JSON file, reporting the data...")
+    outputjson.main(pth2)
+    exit()
 fname = input("Enter the name of the function you want to debug: ")
 pth = pth2.replace(".py", "")
 
 print("----------------------------------------------")
-print("             STARTING FUNCTION                ")
+print("              RUNNING FUNCTION                ")
 print("----------------------------------------------")
 
 def trace_varchanges(frame, event, args):
@@ -153,15 +160,34 @@ def trace_varchanges(frame, event, args):
 
 stime = time.time()
 # add corner case
+# take input for function from user
 modle = importlib.import_module(pth)
 func = getattr(modle, fname)
-sys.settrace(trace_main)
-func(3, 5)
-# print(writetojson.lines)
+sig = signature(func)
+ls = str(sig)
+ln = []
+crr = ""
 
-# print("----------------------------------------------")
-# print("                     REPORT                   ")
-# print("----------------------------------------------")
+for i in ls:
+    if(i == '('):
+        crr = ""
+        continue
+    if(i == ')'):
+        ln.append(crr)
+        crr= ""
+        continue
+    if(i == ','):
+        ln.append(crr)
+        crr= ""
+    else:
+        crr+=i
+valln = []
+print("The function %s has %s arguements, please give input for each of them")
+
+sys.settrace(trace_main)
+func(3, 5, 0)
+sys.settrace(None)
+
 arr = []
 for i in answerint:
     arr = []
@@ -223,6 +249,6 @@ jsndta["timestamp"] = time.time()
 jsndta["report"] = arr
 writetojson.addtoothers(jsndta)
 
-# print(writetojson.data)
-print(writetojson.variables)
-# print(writetojson.lines)
+writetojson.findata()
+writetojson.dumpjson()
+print("Written to json file!")
