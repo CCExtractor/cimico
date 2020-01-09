@@ -6,6 +6,7 @@ import importlib
 import writetojson
 import outputjson
 from inspect import isfunction, getmembers
+import testsuite
 
 variablevalues = {}
 answerint = {}
@@ -24,20 +25,41 @@ def trace_main(frame, event, args):
 print("----------------------------------------------")
 print("                 TAKING INPUT                 ")
 print("----------------------------------------------")
-pth2 = input("Enter the name of the file you want to debug: ")
-if pth2.find(".json") != -1:
-    print("You entered a JSON file, reporting the data...")
-    outputjson.main(pth2)
-    exit()
-if pth2.find(".py") == -1:
-    print("Invalid file, breaking the program")
-    exit()
-fname = input("Enter the name of the function you want to debug: ")
-pth = pth2.replace(".py", "")
-modle = importlib.import_module(pth)
-if(not hasattr(modle, fname)):
-    print("Invalid input! Either wrong function name or wrong path!")
-    exit()
+tests = False
+functest = 0
+a1 = input("Do you want to use the test suite? (y/n)")
+if a1 == 'y':
+    tests = True
+    print("Which algorithm do you want to test?")
+    print("1 - Quicksort")
+    print("2 - Binary Search")
+    print("3 - Depth-First Search")
+    print("4 - Breadth-First Search")
+    print("5 - Knapsack Problem")
+    print("6 - Bubble Sort")
+    print("7 - Longest Increasing Subsequence")
+    print("8 - Longest Common Subsequence")
+    print("9 - Insertion Sort")
+    print("10 - Kadanes Algorithm")
+    t1= int(input("Enter: "))
+    while(t1 > 10 or t1<1):
+        t1 = int(input("Sorry invalid input! Enter Again:"))
+    functest = t1
+else:
+    pth2 = input("Enter the name of the file you want to debug: ")
+    if pth2.find(".json") != -1:
+        print("You entered a JSON file, reporting the data...")
+        outputjson.main(pth2)
+        exit()
+    if pth2.find(".py") == -1:
+        print("Invalid file, breaking the program")
+        exit()
+    fname = input("Enter the name of the function you want to debug: ")
+    pth = pth2.replace(".py", "")
+    modle = importlib.import_module(pth)
+    if(not hasattr(modle, fname)):
+        print("Invalid input! Either wrong function name or wrong path!")
+        exit()
 
 print("----------------------------------------------")
 print("              RUNNING FUNCTION                ")
@@ -165,10 +187,35 @@ def trace_varchanges(frame, event, args):
 
 
 stime = time.time()
-modle = importlib.import_module(pth)
-func = getattr(modle, fname)
+if(tests == False):
+    modle = importlib.import_module(pth)
+    func = getattr(modle, fname)
 sys.settrace(trace_main)
-func(3, 5, 0)
+if(tests == True):
+    if functest== 1:
+        testsuite.quicksort([4, 8, 5, 6, 2, 10])
+    elif functest==2:
+        testsuite.binarysearch([2, 6, 9, 10, 14], 0, 4, 6)
+    elif functest==3:
+        testsuite.initiliazegraph()
+        testsuite.dfs(testsuite.adj, testsuite.visited, 1)
+    elif functest==4:
+        testsuite.initiliazegraph()
+        testsuite.bfs(testsuite.adj, testsuite.visited, 1)
+    elif functest==5:
+        testsuite.knapsack(50, [10,20,30], [60,100,120], 3)
+    elif functest==6:
+        testsuite.bubblesort([4, 8, 5, 6, 2, 10])
+    elif functest==7:
+        testsuite.lis([4, 8, 5, 6, 2, 10])
+    elif functest==8:
+        testsuite.lcs("AGGTAB", "GXTXAYB", 6, 7)
+    elif functest==9:
+        testsuite.insertionsort([4, 8, 5, 6, 2, 10])
+    elif functest==10:
+        testsuite.kadanes([-2, -3, 4, -1, -2, 1, 5, -3])
+else:
+    func(3, 5, 0)
 sys.settrace(None)
 
 arr = []
@@ -178,7 +225,7 @@ for i in answerint:
     arr.append(strval)
     strval = "It was initialized on line " + str(answerint[i][0])  + "."
     arr.append(strval)
-    strval = "It's value over the program ranges from " + str(answerint[i][1]) + " to " + str(answerint[i][1]) + "."
+    strval = "It's value over the program ranges from " + str(answerint[i][1]) + " to " + str(answerint[i][2]) + "."
     arr.append(strval)
     lastval = answerint[i][3][0][1]
     strval = "The initial value of the variable is " + str(lastval)  + "."
@@ -231,7 +278,6 @@ jsndta = {}
 jsndta["timestamp"] = time.time()
 jsndta["report"] = arr
 writetojson.addtoothers(jsndta)
-
 writetojson.findata()
 writetojson.dumpjson()
 print("Written to json file!")
