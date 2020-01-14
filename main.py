@@ -7,6 +7,7 @@ import importlib
 import writetojson
 import outputjson
 from inspect import isfunction, getmembers
+import generatevid
 import testsuite
 
 variablevalues = {}
@@ -49,6 +50,11 @@ if a1 == 'y':
 else:
     pth2 = input("Enter the name of the file you want to debug: ")
     if pth2.find(".json") != -1:
+        inp2 = input("Do you want to generate a video?(y/n)")
+        if(inp2 == 'y'):
+            print("Generating video...")
+            generatevid.main(pth2)
+            exit()
         print("You entered a JSON file, reporting the data...")
         outputjson.main(pth2)
         exit()
