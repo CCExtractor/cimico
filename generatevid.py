@@ -1,13 +1,15 @@
-import inspect 
-import example
-import testsuite
-import writetojson
-import importlib
+from PIL import Image, ImageDraw, ImageFont
+import json
 
-def lmao():
-    return 0
+dta = {}
 
-modle = importlib.import_module('example')
-func = getattr(modle, 'main')
+def main(pth):
+    with open(pth, 'r') as f:
+        dta = json.load(f)
+    img = Image.new('RGB', (1920, 1080), color = (255, 255, 255))
+    fnt = ImageFont.truetype('fonts/ubuntu.ttf', 45)
+    d = ImageDraw.Draw(img)
+    d.text((50,50), dta["source"], fill=(0,0,0), font = fnt)
+    img.save('img.png')
 
-print(inspect.getsource(func))
+main("data.json")
