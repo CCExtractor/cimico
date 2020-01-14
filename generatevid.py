@@ -1,3 +1,4 @@
+import glob, os
 from PIL import Image, ImageDraw, ImageFont
 import json
 import copy
@@ -10,6 +11,7 @@ def main(pth):
     imgs = []
     with open(pth, 'r') as f:
         dta = json.load(f)
+    print("andsklfa")
     src = dta["source"].splitlines()
     curr = -1
     strtln = dta["lines"]["1"]["report"][0]
@@ -78,14 +80,17 @@ def main(pth):
                     d.text((960, 110 + (stp*30)),k, fill=(0,0,0), font = fnt)
                     stp+=1
                 stp+=1
-        imgnm = 'imgs/img' + str(j+1) + ".png"
+        imgnm = 'img' + str(j+1) + ".png"
         img.save(imgnm)
         img2 = cv.imread(imgnm)
         height, width, layers = img2.shape
         size = (width,height)
         imgs.append(img2)
-    out = cv.VideoWriter('DebuggerVideo.avi',cv.VideoWriter_fourcc(*'DIVX'), 2, (1920, 1080))
+    out = cv.VideoWriter('DebuggerVideo.avi',cv.VideoWriter_fourcc(*'DIVX'), 0.5, (1920, 1080))
     for i in range(len(imgs)):
         out.write(imgs[i])
     out.release()
+    for file in glob.glob("*.png"):
+        os.remove(file)
+    
     print("Video Saved.")
