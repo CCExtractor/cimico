@@ -1,6 +1,7 @@
 import json
 
 data = {}
+data2 = {}
 
 lines = {}
 variables = {}
