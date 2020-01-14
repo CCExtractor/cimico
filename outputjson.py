@@ -49,21 +49,33 @@ def main(pth):
             mnval = dta["variables"][i]["report"][2]
             mxval = dta["variables"][i]["report"][2]
             lastval = dta["variables"][i]["report"][2]
+            print("The initial value of the variable was %s" % (lastval))
             for j in dta["variables"][i]["report"][3]:
                 print("In line %s, the variable %s changed values from %s to %s"%(j[0], i, j[1], j[2]))
                 lastval = j[2]
                 mnval = min(j[2], mnval)
                 mxval = max(j[2], mxval)
             print("The value of the variable ranges from %s to %s" % (mnval, mxval))
+            print("The final value of the variable is %s" % (lastval))
         else: 
-            
-            print("----------------------------------------------")
+            lastval = dta["variables"][i]["report"][2]
+            print("The initial value of the variable was %s" % (lastval))
+            for j in dta["variables"][i]["report"][3]:
+                print("In line %s, the variable %s changed values from %s to %s"%(j[0], i, j[1], j[2]))
+                lastval = j[2]
+            print("The final value of the variable is %s" % (lastval))
+        print("----------------------------------------------")
     cnt= 0
     print("               OTHER INFORMATION              ")
     print("----------------------------------------------")
     for i in dta["others"]["report"]:
-        print(i)
         cnt+=1
         if(cnt == 1):
+            print("The program finished in {:f} seconds".format(curr[3]))
             print("----------------------------------------------")
+        else:
+            if int(i[1]) != 1:
+                print("Line %s was executed %s times" % (i[0], i[1]))
+            else:
+                print("Line %s was executed %s time" % (i[0], i[1]))
     print("----------------------------------------------")
