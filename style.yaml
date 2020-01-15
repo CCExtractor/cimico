@@ -1,7 +1,8 @@
-# fps: 
-# font_path: 
-# fontsz1: 
-# fontsz2:
-# introtext:
-# introtext_time:
-# watermark:
+fps: 1
+font_path: "fonts/hack.ttf"
+fontsz: 20
+introtext: "Code written by knightron0"
+# introduction time in seconds
+introtext_time: 5
+# toggle watermark
+watermark: True
