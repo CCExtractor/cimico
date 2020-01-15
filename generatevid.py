@@ -10,12 +10,13 @@ dta = {}
 
 def main(pth):
     imgs = []
-    # add default yaml file
     with open(pth, 'r') as f:
         dta = json.load(f)
-    with open('style.yaml') as f:
-        style = yaml.load(f, Loader=yaml.FullLoader)
-        print(style)
+    try:
+        with open('style.yaml') as f:
+            style = yaml.load(f, Loader=yaml.FullLoader)
+    except:
+        style = {'introtext_time': 5, 'fps': 1, 'watermark': True, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf'}
     src = dta["source"].splitlines()
     fntsz = style["fontsz"]
     curr = -1
@@ -26,7 +27,8 @@ def main(pth):
     img = Image.new('RGB', (1920, 1080), color = (0, 0, 0))
     fnt = ImageFont.truetype('fonts/hack.ttf', fntsz)
     d = ImageDraw.Draw(img)
-    d.text((900, 450), style["introtext"], fill=(255,255,255), font = fnt)
+    w, h = d.textsize(style["introtext"])
+    d.text(((1920-w)/2, 530), style["introtext"], fill=(255,255,255), font = fnt)
     num = 1
     for i in range(style["fps"]*style["introtext_time"]):
         imgnm = 'img' + str(num) + ".png"
@@ -48,10 +50,10 @@ def main(pth):
                 d.text((0,(i*fntsz)),src[i], fill=(255,255,255), font = fnt)
         fnt = ImageFont.truetype('fonts/hack.ttf', 20)
         if dta["lines"][str(min(j+1, length))]["report"][2] == 1:
-            ln = "This line has been executed %s time and the time spent till" % (1)
+            ln = "This line has been executed %s time and the time spent till now on this" % (1)
         else:
-            ln = "This line has been executed %s times and the time spent till" % (dta["lines"][str(min(j+1, length))]["report"][2])
-        ln2 = "now on this line is {:f} seconds".format(dta["lines"][str(min(j+1, length))]["report"][3])
+            ln = "This line has been executed %s times and the time spent till now on this" % (dta["lines"][str(min(j+1, length))]["report"][2])
+        ln2 = "line is {:f} seconds".format(dta["lines"][str(min(j+1, length))]["report"][3])
         d.text((960, fntsz),ln, fill=(255,255,255), font = fnt)
         d.text((960, fntsz+fntsz),ln2, fill=(255,255,255), font = fnt)
         d.line((940, 80, 1920,80), fill=(255,255,255), width=5)
@@ -86,13 +88,20 @@ def main(pth):
         for i in allvars:
             if i in didmodify:
                 if(didmodify[i] == True):
-                    st = "The variable " + allvars[i][0] + " previous value " +  str(allvars[i][1]) + " and current value " + str(allvars[i][2])
-                    lines = textwrap.wrap(st, width=60)
-                    for k in lines:
-                        d.text((960, 90 + (stp*fntsz)),k, fill=(0,200,0), font = fnt)
-                        stp+=1
+                    if(allvars[i][1] != None):
+                        st = "The variable " + allvars[i][0] + " was changed, previous value " +  str(allvars[i][1]) + " and current value " + str(allvars[i][2])
+                        lines = textwrap.wrap(st, width=100)
+                        for k in lines:
+                            d.text((960, 90 + (stp*fntsz)),k, fill=(0,200,0), font = fnt)
+                            stp+=1
+                    else:
+                        st = "The variable " + allvars[i][0] + " was created, current value " + str(allvars[i][2])
+                        lines = textwrap.wrap(st, width=100)
+                        for k in lines:
+                            d.text((960, 90 + (stp*fntsz)),k, fill=(69, 243, 226), font = fnt)
+                            stp+=1
             else:
-                st = "The variable " + allvars[i][0] + " previous value " +  str(allvars[i][1]) + " and current value " + str(allvars[i][2])
+                st = "The variable " + allvars[i][0] + ", current value " + str(allvars[i][2])
                 lines = textwrap.wrap(st, width=60)
                 for k in lines:
                     d.text((960, 90 + (stp*fntsz)),k, fill=(255,255,255), font = fnt)
