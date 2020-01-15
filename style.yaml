@@ -6,3 +6,5 @@ introtext: "Code written by knightron0"
 introtext_time: 5
 # toggle watermark
 watermark: True
+width: 1920
+height: 1080

@@ -17,6 +17,8 @@ def main(pth):
             style = yaml.load(f, Loader=yaml.FullLoader)
     except:
         style = {'introtext_time': 5, 'fps': 1, 'watermark': True, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf'}
+    height = style["height"]
+    width = style["width"]
     src = dta["source"].splitlines()
     fntsz = style["fontsz"]
     curr = -1
@@ -25,7 +27,7 @@ def main(pth):
     variablevalues = {}
     length = len(dta["lines"])
     img = Image.new('RGB', (1920, 1080), color = (0, 0, 0))
-    fnt = ImageFont.truetype('fonts/hack.ttf', fntsz)
+    fnt = ImageFont.truetype(style["font_path"], fntsz)
     d = ImageDraw.Draw(img)
     w, h = d.textsize(style["introtext"])
     d.text(((1920-w)/2, 530), style["introtext"], fill=(255,255,255), font = fnt)
@@ -36,9 +38,11 @@ def main(pth):
         img2 = cv.imread(imgnm)
         imgs.append(img2)
         num+=1
+    tms = int(height//fntsz)
+    till = 0
     for j in range(1, len(dta["lines"])+1):
         img = Image.new('RGB', (1920, 1080), color = (0, 0, 0))
-        fnt = ImageFont.truetype('fonts/hack.ttf', fntsz)
+        fnt = ImageFont.truetype(style["font_path"], fntsz)
         d = ImageDraw.Draw(img)
         d.line((940,0, 940,1080), fill=(255,255,255), width=5)
         curr = dta["lines"][str(j)]["report"][0]-strtln+1
@@ -48,7 +52,8 @@ def main(pth):
                 d.text((0,(i*fntsz)),src[i], fill=(255,255,255), font = fnt)
             else:
                 d.text((0,(i*fntsz)),src[i], fill=(255,255,255), font = fnt)
-        fnt = ImageFont.truetype('fonts/hack.ttf', 20)
+        till+=1
+        fnt = ImageFont.truetype(style["font_path"], 20)
         if dta["lines"][str(min(j+1, length))]["report"][2] == 1:
             ln = "This line has been executed %s time and the time spent till now on this" % (1)
         else:
@@ -127,4 +132,4 @@ def main(pth):
         os.remove(file)
     
     print("Video Saved in this folder with name DebuggerVideo.avi")
-main("data.json")
+# main("data.json")
