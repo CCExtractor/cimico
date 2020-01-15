@@ -11,7 +11,6 @@ def main(pth):
     imgs = []
     with open(pth, 'r') as f:
         dta = json.load(f)
-    print("andsklfa")
     src = dta["source"].splitlines()
     curr = -1
     strtln = dta["lines"]["1"]["report"][0]
@@ -93,4 +92,4 @@ def main(pth):
     for file in glob.glob("*.png"):
         os.remove(file)
     
-    print("Video Saved.")
+    print("Video Saved in this folder with name DebuggerVideo.avi")

@@ -190,7 +190,29 @@ if(tests == False):
     modle = importlib.import_module(pth)
     func = getattr(modle, fname)
     writetojson.data["source"] = inspect.getsource(func)
-
+else:
+    testsuite.initiliazegraph()
+    if functest== 1:
+        testsuite.quicksort([4, 8, 5, 6, 2, 10])
+        writetojson.data["source"] = inspect.getsource(testsuite.quicksort)
+    elif functest==2:
+        writetojson.data["source"] = inspect.getsource(testsuite.binarysearch)
+    elif functest==3:
+        writetojson.data["source"] = inspect.getsource(testsuite.dfs)
+    elif functest==4:
+        writetojson.data["source"] = inspect.getsource(testsuite.bfs)
+    elif functest==5:
+        writetojson.data["source"] = inspect.getsource(testsuite.knapsack)
+    elif functest==6:
+        writetojson.data["source"] = inspect.getsource(testsuite.bubblesort)
+    elif functest==7:
+        writetojson.data["source"] = inspect.getsource(testsuite.lis)
+    elif functest==8:
+        writetojson.data["source"] = inspect.getsource(testsuite.lcs)
+    elif functest==9:
+        writetojson.data["source"] = inspect.getsource(testsuite.insertionsort)
+    elif functest==10:
+        writetojson.data["source"] = inspect.getsource(testsuite.kadanes)
 sys.settrace(trace_main)
 if(tests == True):
     if functest== 1:
@@ -198,10 +220,8 @@ if(tests == True):
     elif functest==2:
         testsuite.binarysearch([2, 6, 9, 10, 14], 0, 4, 6)
     elif functest==3:
-        testsuite.initiliazegraph()
         testsuite.dfs(testsuite.adj, testsuite.visited, 1)
     elif functest==4:
-        testsuite.initiliazegraph()
         testsuite.bfs(testsuite.adj, testsuite.visited, 1)
     elif functest==5:
         testsuite.knapsack(50, [10,20,30], [60,100,120], 3)
@@ -215,6 +235,7 @@ if(tests == True):
         testsuite.insertionsort([4, 8, 5, 6, 2, 10])
     elif functest==10:
         testsuite.kadanes([-2, -3, 4, -1, -2, 1, 5, -3])
+        
 else:
 
     func(3, 5, 0)
@@ -272,4 +293,3 @@ writetojson.addtoothers(jsndta)
 writetojson.findata()
 writetojson.dumpjson()
 print("Written to json file!")
-print(writetojson.data)
