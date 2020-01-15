@@ -2,7 +2,11 @@ def main(y, x, a):
     x += y
     y += x
     z = x * y
-    return x + y + z
+    b = z + y + x + a
+    for i in range(10):
+        b *= 2
+        y += 1
+    return x + y + z + b
 
 
 def testfunction(a, b, curr):

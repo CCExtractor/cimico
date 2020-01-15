@@ -29,7 +29,7 @@ print("                 TAKING INPUT                 ")
 print("----------------------------------------------")
 tests = False
 functest = 0
-a1 = input("Do you want to use the test suite? (y/n)")
+a1 = input("Do you want to use the test suite? (y/n): ")
 if a1 == 'y':
     tests = True
     print("Which algorithm do you want to test?")
@@ -50,7 +50,7 @@ if a1 == 'y':
 else:
     pth2 = input("Enter the name of the file you want to debug: ")
     if pth2.find(".json") != -1:
-        inp2 = input("Do you want to generate a video?(y/n)")
+        inp2 = input("Do you want to generate a video? (y/n): ")
         if(inp2 == 'y'):
             print("Generating video...")
             generatevid.main(pth2)
@@ -78,7 +78,7 @@ def trace_varchanges(frame, event, args):
         return
     code = frame.f_code
     localvars = frame.f_locals
-    line_no = frame.f_lineno-1
+    line_no = frame.f_lineno
     arr = []
     strt = "Starting line %s ..." % (line_no)
     arr.append(line_no)
@@ -93,7 +93,7 @@ def trace_varchanges(frame, event, args):
         if i in localvars:
             if(isinstance(localvars[i], list)):
                 if i not in variablevalues:
-                    line_no = frame.f_lineno-1
+                    line_no = frame.f_lineno
                     func_name = code.co_name
                     lstinitialize.append([i, localvars[i]])
                     variablevalues[i] = []
@@ -102,7 +102,7 @@ def trace_varchanges(frame, event, args):
                 else:
                     changed = False
                     if (len(variablevalues[i]) < len(localvars[i])):
-                        line_no = frame.f_lineno-1
+                        line_no = frame.f_lineno
                         func_name = code.co_name
                         for j in range(len(variablevalues[i])):
                             if(variablevalues[i][j] != localvars[i][j]):        
@@ -114,7 +114,7 @@ def trace_varchanges(frame, event, args):
                         variablevalues[i] = []
                         variablevalues[i] = localvars[i][:]
                     else:
-                        line_no = frame.f_lineno-1
+                        line_no = frame.f_lineno
                         func_name = code.co_name
                         for j in range(min(len(variablevalues[i]), len(localvars[i]))):
                             if(variablevalues[i][j] != localvars[i][j]):        
@@ -126,7 +126,7 @@ def trace_varchanges(frame, event, args):
                         answerother[i][2].append([line_no, variablevalues[i]])
             else:
                 if i not in variablevalues:
-                    line_no = frame.f_lineno-1
+                    line_no = frame.f_lineno
                     func_name = code.co_name
                     vrinitialize.append([i, localvars[i]])
                     if(isinstance(localvars[i], int)):
@@ -143,7 +143,7 @@ def trace_varchanges(frame, event, args):
                         variablevalues[i] = localvars[i]
                 else:
                     if(localvars[i] != variablevalues[i]):
-                        line_no = frame.f_lineno-1
+                        line_no = frame.f_lineno
                         func_name = code.co_name
                         vrchngs.append([i, variablevalues[i], localvars[i]])
                         if(isinstance(localvars[i], int)):
@@ -161,7 +161,7 @@ def trace_varchanges(frame, event, args):
                             variablevalues[i] = localvars[i].copy()
                         else:
                             variablevalues[i] = localvars[i]
-    line_no = frame.f_lineno-1
+    line_no = frame.f_lineno
     if line_no not in nooftimesperline:
         nooftimesperline[line_no] = 1
     else:
