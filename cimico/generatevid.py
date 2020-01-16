@@ -12,11 +12,10 @@ def main(pth):
     imgs = []
     with open(pth, 'r') as f:
         dta = json.load(f)
-    try:
-        with open('style.yaml') as f:
-            style = yaml.load(f, Loader=yaml.FullLoader)
-    except:
-        style = {'introtext_time': 5, 'fps': 1, 'watermark': True, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf'}
+    with open('style.yaml') as f:
+        style = yaml.load(f, Loader=yaml.FullLoader)
+    # except:
+        # style = {'introtext_time': 5, 'fps': 1, 'watermark': True, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf'}
     height = style["height"]
     width = style["width"]
     src = dta["source"].splitlines()
@@ -132,4 +131,4 @@ def main(pth):
         os.remove(file)
     
     print("Video Saved in this folder with name DebuggerVideo.avi")
-# main("data.json")
+main("data.json")
