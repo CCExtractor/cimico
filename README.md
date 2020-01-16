@@ -1,3 +1,5 @@
-# knightroBugger
+# Cimico
 Hello there!
-knightroBugger is a debugger that is written in python which debugs python code!
+Cimico is a debugger that is written in python which debugs python code!
+
+This project was created under CCExtractorDevelopment in Google Code-In 2019
