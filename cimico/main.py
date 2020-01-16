@@ -22,56 +22,6 @@ def trace_main(frame, event, args):
     if(event != 'call'):
         return 
     return trace_varchanges
-
-
-print("----------------------------------------------")
-print("                 TAKING INPUT                 ")
-print("----------------------------------------------")
-tests = False
-functest = 0
-a1 = input("Do you want to use the test suite? (y/n): ")
-if a1 == 'y':
-    tests = True
-    print("Which algorithm do you want to test?")
-    print("1 - Quicksort")
-    print("2 - Binary Search")
-    print("3 - Depth-First Search")
-    print("4 - Breadth-First Search")
-    print("5 - Knapsack Problem")
-    print("6 - Bubble Sort")
-    print("7 - Longest Increasing Subsequence")
-    print("8 - Longest Common Subsequence")
-    print("9 - Insertion Sort")
-    print("10 - Kadanes Algorithm")
-    t1= int(input("Enter: "))
-    while(t1 > 10 or t1<1):
-        t1 = int(input("Sorry invalid input! Enter Again:"))
-    functest = t1
-else:
-    pth2 = input("Enter the name of the file you want to debug: ")
-    if pth2.find(".json") != -1:
-        inp2 = input("Do you want to generate a video? (y/n): ")
-        if(inp2 == 'y'):
-            print("Generating video...")
-            generatevid.main(pth2)
-            exit()
-        print("You entered a JSON file, reporting the data...")
-        outputjson.main(pth2)
-        exit()
-    if pth2.find(".py") == -1:
-        print("Invalid file, breaking the program")
-        exit()
-    fname = input("Enter the name of the function you want to debug: ")
-    pth = pth2.replace(".py", "")
-    modle = importlib.import_module(pth)
-    if(not hasattr(modle, fname)):
-        print("Invalid input! Either wrong function name or wrong path!")
-        exit()
-
-print("----------------------------------------------")
-print("              RUNNING FUNCTION                ")
-print("----------------------------------------------")
-
 def trace_varchanges(frame, event, args):
     global step
     if event != "line":
@@ -185,111 +135,161 @@ def trace_varchanges(frame, event, args):
     jsndta["report"] = arr
     writetojson.addtolines(jsndta, step)
     
-stime = time.time()
-if(tests == False):
-    modle = importlib.import_module(pth)
-    func = getattr(modle, fname)
-    writetojson.data["source"] = inspect.getsource(func)
-else:
-    testsuite.initiliazegraph()
-    if functest== 1:
-        testsuite.quicksort([4, 8, 5, 6, 2, 10])
-        writetojson.data["source"] = inspect.getsource(testsuite.quicksort)
-    elif functest==2:
-        writetojson.data["source"] = inspect.getsource(testsuite.binarysearch)
-    elif functest==3:
-        writetojson.data["source"] = inspect.getsource(testsuite.dfs)
-    elif functest==4:
-        writetojson.data["source"] = inspect.getsource(testsuite.bfs)
-    elif functest==5:
-        writetojson.data["source"] = inspect.getsource(testsuite.knapsack)
-    elif functest==6:
-        writetojson.data["source"] = inspect.getsource(testsuite.bubblesort)
-    elif functest==7:
-        writetojson.data["source"] = inspect.getsource(testsuite.lis)
-    elif functest==8:
-        writetojson.data["source"] = inspect.getsource(testsuite.lcs)
-    elif functest==9:
-        writetojson.data["source"] = inspect.getsource(testsuite.insertionsort)
-    elif functest==10:
-        writetojson.data["source"] = inspect.getsource(testsuite.kadanes)
-sys.settrace(trace_main)
-if(tests == True):
-    if functest== 1:
-        testsuite.quicksort([4, 8, 5, 6, 2, 10])
-    elif functest==2:
-        testsuite.binarysearch([2, 6, 9, 10, 14], 0, 4, 6)
-    elif functest==3:
-        testsuite.dfs(testsuite.adj, testsuite.visited, 1)
-    elif functest==4:
-        testsuite.bfs(testsuite.adj, testsuite.visited, 1)
-    elif functest==5:
-        testsuite.knapsack(50, [10,20,30], [60,100,120], 3)
-    elif functest==6:
-        testsuite.bubblesort([4, 8, 5, 6, 2, 10])
-    elif functest==7:
-        testsuite.lis([4, 8, 5, 6, 2, 10])
-    elif functest==8:
-        testsuite.lcs("AGGTAB", "GXTXAYB", 6, 7)
-    elif functest==9:
-        testsuite.insertionsort([4, 8, 5, 6, 2, 10])
-    elif functest==10:
-        testsuite.kadanes([-2, -3, 4, -1, -2, 1, 5, -3])
+def main():
+    print("----------------------------------------------")
+    print("                 TAKING INPUT                 ")
+    print("----------------------------------------------")
+    tests = False
+    functest = 0
+    a1 = input("Do you want to use the test suite? (y/n): ")
+    if a1 == 'y':
+        tests = True
+        print("Which algorithm do you want to test?")
+        print("1 - Quicksort")
+        print("2 - Binary Search")
+        print("3 - Depth-First Search")
+        print("4 - Breadth-First Search")
+        print("5 - Knapsack Problem")
+        print("6 - Bubble Sort")
+        print("7 - Longest Increasing Subsequence")
+        print("8 - Longest Common Subsequence")
+        print("9 - Insertion Sort")
+        print("10 - Kadanes Algorithm")
+        t1= int(input("Enter: "))
+        while(t1 > 10 or t1<1):
+            t1 = int(input("Sorry invalid input! Enter Again:"))
+        functest = t1
+    else:
+        pth2 = input("Enter the name of the file you want to debug: ")
+        if pth2.find(".json") != -1:
+            inp2 = input("Do you want to generate a video? (y/n): ")
+            if(inp2 == 'y'):
+                print("Generating video...")
+                generatevid.main(pth2)
+                exit()
+            print("You entered a JSON file, reporting the data...")
+            outputjson.main(pth2)
+            exit()
+        if pth2.find(".py") == -1:
+            print("Invalid file, breaking the program")
+            exit()
+        fname = input("Enter the name of the function you want to debug: ")
+        pth = pth2.replace(".py", "")
+        modle = importlib.import_module(pth)
+        if(not hasattr(modle, fname)):
+            print("Invalid input! Either wrong function name or wrong path!")
+            exit()
+
+    print("----------------------------------------------")
+    print("              RUNNING FUNCTION                ")
+    print("----------------------------------------------")
+
+
+    stime = time.time()
+    if(tests == False):
+        modle = importlib.import_module(pth)
+        func = getattr(modle, fname)
+        writetojson.data["source"] = inspect.getsource(func)
+    else:
+        testsuite.initiliazegraph()
+        if functest== 1:
+            testsuite.quicksort([4, 8, 5, 6, 2, 10])
+            writetojson.data["source"] = inspect.getsource(testsuite.quicksort)
+        elif functest==2:
+            writetojson.data["source"] = inspect.getsource(testsuite.binarysearch)
+        elif functest==3:
+            writetojson.data["source"] = inspect.getsource(testsuite.dfs)
+        elif functest==4:
+            writetojson.data["source"] = inspect.getsource(testsuite.bfs)
+        elif functest==5:
+            writetojson.data["source"] = inspect.getsource(testsuite.knapsack)
+        elif functest==6:
+            writetojson.data["source"] = inspect.getsource(testsuite.bubblesort)
+        elif functest==7:
+            writetojson.data["source"] = inspect.getsource(testsuite.lis)
+        elif functest==8:
+            writetojson.data["source"] = inspect.getsource(testsuite.lcs)
+        elif functest==9:
+            writetojson.data["source"] = inspect.getsource(testsuite.insertionsort)
+        elif functest==10:
+            writetojson.data["source"] = inspect.getsource(testsuite.kadanes)
+    sys.settrace(trace_main)
+    if(tests == True):
+        if functest== 1:
+            testsuite.quicksort([4, 8, 5, 6, 2, 10])
+        elif functest==2:
+            testsuite.binarysearch([2, 6, 9, 10, 14], 0, 4, 6)
+        elif functest==3:
+            testsuite.dfs(testsuite.adj, testsuite.visited, 1)
+        elif functest==4:
+            testsuite.bfs(testsuite.adj, testsuite.visited, 1)
+        elif functest==5:
+            testsuite.knapsack(50, [10,20,30], [60,100,120], 3)
+        elif functest==6:
+            testsuite.bubblesort([4, 8, 5, 6, 2, 10])
+        elif functest==7:
+            testsuite.lis([4, 8, 5, 6, 2, 10])
+        elif functest==8:
+            testsuite.lcs("AGGTAB", "GXTXAYB", 6, 7)
+        elif functest==9:
+            testsuite.insertionsort([4, 8, 5, 6, 2, 10])
+        elif functest==10:
+            testsuite.kadanes([-2, -3, 4, -1, -2, 1, 5, -3])
+            
+    else:
+
+        func(3, 5, 0)
+
+    sys.settrace(None)
+
+    arr = []
+    for i in answerint:
+        arr = []
+        arr.append(i)
+        arr.append(answerint[i][0])
+        lastval = answerint[i][3][0][1]
+        arr.append(lastval)
+        arr2 = []
+        for j in range(1, len(answerint[i][3])):
+            arr2.append([answerint[i][3][j][0], lastval, answerint[i][3][j][1]])
+            lastval = answerint[i][3][j][1]
+        arr.append(arr2)
+        jsndta = {}
+        jsndta["timestamp"] = time.time()
+        jsndta["report"] = arr
+        jsndta["ifint"] = True
+        jsndta["type"] = "int"
+        writetojson.addtovars(jsndta, i)
         
-else:
 
-    func(3, 5, 0)
+    for i in answerother:
+        arr = []
+        typevar = str(answerother[i][1])[8:]
+        typevar2 = str(typevar[::-1][2:])[::-1]
+        arr.append(i)
+        arr.append(answerother[i][0])
+        lastval = answerother[i][2][0][1]
+        arr.append(lastval)
+        arr2 = []
+        for j in range(1, len(answerother[i][2])):
+            arr2.append([answerother[i][2][j][0], lastval, answerother[i][2][j][1]])
+            lastval = answerother[i][2][j][1]
+        arr.append(arr2)
+        jsndta = {}
+        jsndta["timestamp"] = time.time()
+        jsndta["report"] = arr
+        jsndta["type"] = typevar2
+        writetojson.addtovars(jsndta, i)
 
-sys.settrace(None)
-
-arr = []
-for i in answerint:
     arr = []
-    arr.append(i)
-    arr.append(answerint[i][0])
-    lastval = answerint[i][3][0][1]
-    arr.append(lastval)
-    arr2 = []
-    for j in range(1, len(answerint[i][3])):
-        arr2.append([answerint[i][3][j][0], lastval, answerint[i][3][j][1]])
-        lastval = answerint[i][3][j][1]
-    arr.append(arr2)
+    arr.append(time.time()-stime)
+    for i in nooftimesperline:
+        arr.append([i, nooftimesperline[i]])
+
     jsndta = {}
     jsndta["timestamp"] = time.time()
     jsndta["report"] = arr
-    jsndta["ifint"] = True
-    jsndta["type"] = "int"
-    writetojson.addtovars(jsndta, i)
-    
-
-for i in answerother:
-    arr = []
-    typevar = str(answerother[i][1])[8:]
-    typevar2 = str(typevar[::-1][2:])[::-1]
-    arr.append(i)
-    arr.append(answerother[i][0])
-    lastval = answerother[i][2][0][1]
-    arr.append(lastval)
-    arr2 = []
-    for j in range(1, len(answerother[i][2])):
-        arr2.append([answerother[i][2][j][0], lastval, answerother[i][2][j][1]])
-        lastval = answerother[i][2][j][1]
-    arr.append(arr2)
-    jsndta = {}
-    jsndta["timestamp"] = time.time()
-    jsndta["report"] = arr
-    jsndta["type"] = typevar2
-    writetojson.addtovars(jsndta, i)
-
-arr = []
-arr.append(time.time()-stime)
-for i in nooftimesperline:
-    arr.append([i, nooftimesperline[i]])
-
-jsndta = {}
-jsndta["timestamp"] = time.time()
-jsndta["report"] = arr
-writetojson.addtoothers(jsndta)
-writetojson.findata()
-writetojson.dumpjson()
-print("Written to json file!")
+    writetojson.addtoothers(jsndta)
+    writetojson.findata()
+    writetojson.dumpjson()
+    print("Written to json file!")

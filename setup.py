@@ -7,6 +7,9 @@ setuptools.setup(
     name="cimico", 
     version="1.0.0",
     author="knightron0",
+    entry_points = {
+        'console_scripts': ['cimico = cimico.main:main'],
+    },
     author_email="sarthak.robo@gmail.com",
     description="A simple python debugger that generates a video of the program running along with valuable information.",
     long_description=long_description,
