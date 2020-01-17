@@ -295,3 +295,6 @@ def main():
     findata()
     dumpjson()
     print("Written to json file!")
+
+
+main()
