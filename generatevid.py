@@ -150,4 +150,3 @@ def generatevid(pth):
         os.remove(file)
     
     print("Video Saved in this folder with name DebuggerVideo.avi")
-# convertogif()
