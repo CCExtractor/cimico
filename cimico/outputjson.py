@@ -3,7 +3,7 @@ from datetime import datetime
 
 dta = {}
 
-def main(pth):
+def output(pth):
     with open(pth, 'r') as f:
         dta = json.load(f)
     n = len(dta["lines"])

@@ -8,7 +8,7 @@ import yaml
 
 dta = {}
 
-def main(pth):
+def generatevid(pth):
     imgs = []
     with open(pth, 'r') as f:
         dta = json.load(f)
@@ -131,4 +131,4 @@ def main(pth):
         os.remove(file)
     
     print("Video Saved in this folder with name DebuggerVideo.avi")
-main("data.json")
+# generatevid("data.json")

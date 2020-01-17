@@ -21,3 +21,6 @@ def findata():
 def dumpjson():
     with open('data.json', 'w') as fp:
         json.dump(data, fp)
+
+def addtosource(srccode):
+    data["source"] = srccode

@@ -16,6 +16,8 @@ answerother = {}
 aggtimeperline = {}
 nooftimesperline = {}
 
+
+
 step = 0
 
 def trace_main(frame, event, args):
@@ -133,7 +135,7 @@ def trace_varchanges(frame, event, args):
     jsndta = {}
     jsndta["timestamp"] = time.time()
     jsndta["report"] = arr
-    writetojson.addtolines(jsndta, step)
+    addtolines(jsndta, step)
     
 def main():
     print("----------------------------------------------")
@@ -165,10 +167,10 @@ def main():
             inp2 = input("Do you want to generate a video? (y/n): ")
             if(inp2 == 'y'):
                 print("Generating video...")
-                generatevid.main(pth2)
+                generatevid.generatevid(pth2)
                 exit()
             print("You entered a JSON file, reporting the data...")
-            outputjson.main(pth2)
+            output(pth2)
             exit()
         if pth2.find(".py") == -1:
             print("Invalid file, breaking the program")
@@ -189,30 +191,30 @@ def main():
     if(tests == False):
         modle = importlib.import_module(pth)
         func = getattr(modle, fname)
-        writetojson.data["source"] = inspect.getsource(func)
+        writetojson.addtosource(inspect.getsource(func))
     else:
         testsuite.initiliazegraph()
         if functest== 1:
             testsuite.quicksort([4, 8, 5, 6, 2, 10])
-            writetojson.data["source"] = inspect.getsource(testsuite.quicksort)
+            writetojson.addtosource(inspect.getsource(testsuite.quicksort))
         elif functest==2:
-            writetojson.data["source"] = inspect.getsource(testsuite.binarysearch)
+            writetojson.addtosource(inspect.getsource(testsuite.binarysearch))
         elif functest==3:
-            writetojson.data["source"] = inspect.getsource(testsuite.dfs)
+            writetojson.addtosource(inspect.getsource(testsuite.dfs))
         elif functest==4:
-            writetojson.data["source"] = inspect.getsource(testsuite.bfs)
+            writetojson.addtosource(inspect.getsource(testsuite.bfs))
         elif functest==5:
-            writetojson.data["source"] = inspect.getsource(testsuite.knapsack)
+            writetojson.addtosource(inspect.getsource(testsuite.knapsack))
         elif functest==6:
-            writetojson.data["source"] = inspect.getsource(testsuite.bubblesort)
+            writetojson.addtosource(inspect.getsource(testsuite.bubblesort))
         elif functest==7:
-            writetojson.data["source"] = inspect.getsource(testsuite.lis)
+            writetojson.addtosource(inspect.getsource(testsuite.lis))
         elif functest==8:
-            writetojson.data["source"] = inspect.getsource(testsuite.lcs)
+            writetojson.addtosource(inspect.getsource(testsuite.lcs))
         elif functest==9:
-            writetojson.data["source"] = inspect.getsource(testsuite.insertionsort)
+            writetojson.addtosource(inspect.getsource(testsuite.insertionsort))
         elif functest==10:
-            writetojson.data["source"] = inspect.getsource(testsuite.kadanes)
+            writetojson.addtosource(inspect.getsource(testsuite.kadanes))
     sys.settrace(trace_main)
     if(tests == True):
         if functest== 1:
@@ -259,7 +261,7 @@ def main():
         jsndta["report"] = arr
         jsndta["ifint"] = True
         jsndta["type"] = "int"
-        writetojson.addtovars(jsndta, i)
+        addtovars(jsndta, i)
         
 
     for i in answerother:
@@ -279,7 +281,7 @@ def main():
         jsndta["timestamp"] = time.time()
         jsndta["report"] = arr
         jsndta["type"] = typevar2
-        writetojson.addtovars(jsndta, i)
+        addtovars(jsndta, i)
 
     arr = []
     arr.append(time.time()-stime)
@@ -289,7 +291,7 @@ def main():
     jsndta = {}
     jsndta["timestamp"] = time.time()
     jsndta["report"] = arr
-    writetojson.addtoothers(jsndta)
-    writetojson.findata()
-    writetojson.dumpjson()
+    addtoothers(jsndta)
+    findata()
+    dumpjson()
     print("Written to json file!")
