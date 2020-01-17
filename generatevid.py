@@ -38,19 +38,20 @@ def generatevid(pth):
         imgs.append(img2)
         num+=1
     tms = int(height//fntsz)
-    print(tms)
     till = 0
     outputtillnow = []
+    oouttill = 0
     for j in range(1, len(dta["lines"])+1):
         img = Image.new('RGB', (1920, 1080), color = (0, 0, 0))
         fnt = ImageFont.truetype(style["font_path"], fntsz)
         d = ImageDraw.Draw(img)
+        if(dta["lines"][str(min(j+1, length))]["report"][10] != ""):
+            outputtillnow.append(dta["lines"][str(j+1)]["report"][10])
         d.line((940,0, 940,1080), fill=(255,255,255), width=5)
         curr = dta["lines"][str(j)]["report"][0]-strtln+1
-        print(min(len(src), till + tms))
         for i in range(till, min(len(src), till + tms)):
             if(i == curr):
-                d.rectangle(((0,(i*fntsz)), (940,(i*20)+20)), fill=(58, 61, 72))
+                d.rectangle(((0,((i-till)*fntsz)), (940,((i-till)*fntsz)+fntsz)), fill=(58, 61, 72))
                 d.text((0,((i-till)*fntsz)),src[i], fill=(255,255,255), font = fnt)
             else:
                 d.text((0,((i-till)*fntsz)),src[i], fill=(255,255,255), font = fnt)
@@ -65,8 +66,10 @@ def generatevid(pth):
         d.text((960, fntsz),ln, fill=(255,255,255), font = fnt)
         d.text((960, fntsz+fntsz),ln2, fill=(255,255,255), font = fnt)
         d.line((940, 80, 1920,80), fill=(255,255,255), width=5)
-        lfttms = 1080-900
+        lfttms = int((1080-900-fntsz)/fntsz)-1
         d.line((940, 900, 1920,900), fill=(255,255,255), width=5)
+        for i in range(max(len(outputtillnow) - lfttms, 0), len(outputtillnow)):
+            d.text((960, 900 + fntsz + ((i-max(len(outputtillnow) - lfttms, 1)) * fntsz)),outputtillnow[i], fill=(255,255,255), font = fnt)
         didmodify = {}
         for i in dta["lines"][str(min(j+1, length))]["report"][7]:
             allvars[i[0]] = [i[0], None, i[1]]

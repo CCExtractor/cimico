@@ -20,6 +20,7 @@ def main(y, x, a):
     b += 1
     b -= 1
     b += 1
+    print("INOI nope")
     b -= 1
     b += 1
     b -= 1
@@ -29,7 +30,7 @@ def main(y, x, a):
     b -= 1
     b += 1
     b -= 1
-    b += 1
+    print("OH HI")
     b -= 1
     b += 1
     b -= 1
@@ -38,32 +39,29 @@ def main(y, x, a):
     b += 1
     b -= 1
     b += 1
-    b -= 1
+    print("INOI nope")
     b += 1
     b -= 1
     b += 1
     b -= 1
     b += 1
+    print("INOI nope")
     b -= 1
+    b -= 1
+    print("INOI nope")
+    print("I")
+    print("N")
+    print("O")
+    print("I")
     b += 1
     b -= 1
     b += 1
+    print("G")
+    print("C")
+    print("I")
     b -= 1
     b += 1
     b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-
     return x + y + z + b
 
 
