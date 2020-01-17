@@ -50,6 +50,16 @@ def main(y, x, a):
     b -= 1
     b += 1
     b -= 1
+    b -= 1
+    b += 1
+    b -= 1
+    b += 1
+    b -= 1
+    b -= 1
+    b += 1
+    b -= 1
+    b += 1
+    b -= 1
     return x + y + z + b
 
 
