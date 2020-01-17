@@ -16,16 +16,18 @@ answerother = {}
 aggtimeperline = {}
 nooftimesperline = {}
 
-
-
+og = sys.stdout
 step = 0
 
 def trace_main(frame, event, args):
     if(event != 'call'):
         return 
     return trace_varchanges
+lastoutput = []
 def trace_varchanges(frame, event, args):
     global step
+    global lastoutput
+    global og
     if event != "line":
         return
     code = frame.f_code
@@ -41,6 +43,7 @@ def trace_varchanges(frame, event, args):
     lstchngs = []
     lstadds= []
     lstinitialize = []
+    sys.stdout = og
     for i in code.co_varnames:
         if i in localvars:
             if(isinstance(localvars[i], list)):
@@ -132,11 +135,20 @@ def trace_varchanges(frame, event, args):
     arr.append(lstinitialize)
     arr.append(vrchngs)
     arr.append(vrinitialize)
+    file = open("output.txt", "r")
+    otpt = ""
+    curroutput = list(file.read())
+    if(len(lastoutput) < len(curroutput)):
+        for i in range(len(lastoutput), len(curroutput)):
+            otpt += curroutput[i]
+    arr.append(otpt)
+    lastoutput = curroutput.copy()
+    file.close()
     jsndta = {}
     jsndta["timestamp"] = time.time()
     jsndta["report"] = arr
-    addtolines(jsndta, step)
-    
+    writetojson.addtolines(jsndta, step)
+    sys.stdout = open("output.txt", "a")
 def main():
     print("----------------------------------------------")
     print("                 TAKING INPUT                 ")
@@ -215,6 +227,7 @@ def main():
             writetojson.addtosource(inspect.getsource(testsuite.insertionsort))
         elif functest==10:
             writetojson.addtosource(inspect.getsource(testsuite.kadanes))
+    sys.stdout = open("output.txt", "w")
     sys.settrace(trace_main)
     if(tests == True):
         if functest== 1:
@@ -243,7 +256,7 @@ def main():
         func(3, 5, 0)
 
     sys.settrace(None)
-
+    sys.stdout = og
     arr = []
     for i in answerint:
         arr = []
@@ -261,9 +274,8 @@ def main():
         jsndta["report"] = arr
         jsndta["ifint"] = True
         jsndta["type"] = "int"
-        addtovars(jsndta, i)
+        writetojson.addtovars(jsndta, i)
         
-
     for i in answerother:
         arr = []
         typevar = str(answerother[i][1])[8:]
@@ -281,19 +293,18 @@ def main():
         jsndta["timestamp"] = time.time()
         jsndta["report"] = arr
         jsndta["type"] = typevar2
-        addtovars(jsndta, i)
+        writetojson.addtovars(jsndta, i)
 
     arr = []
     arr.append(time.time()-stime)
     for i in nooftimesperline:
         arr.append([i, nooftimesperline[i]])
-
     jsndta = {}
     jsndta["timestamp"] = time.time()
     jsndta["report"] = arr
-    addtoothers(jsndta)
-    findata()
-    dumpjson()
+    writetojson.addtoothers(jsndta)
+    writetojson.findata()
+    writetojson.dumpjson()
     print("Written to json file!")
 
 
