@@ -180,6 +180,10 @@ def main():
             if(inp2 == 'y'):
                 print("Generating video...")
                 generatevid.generatevid(pth2)
+                inp3 = input("Do you want to generate a GIF file as well? (y/n)")
+                if(inp3 == "y"):
+                    print("Generating GIF...")
+                    generatevid.convertogif()
                 exit()
             print("You entered a JSON file, reporting the data...")
             output(pth2)
