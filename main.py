@@ -197,7 +197,9 @@ def main():
         if(not hasattr(modle, fname)):
             print("Invalid input! Either wrong function name or wrong path!")
             exit()
-
+    args = list(input("Enter the arguments for the function (space seperated): ").split())
+    for i in range(len(args)):
+        args[i] = int(args[i])
     print("----------------------------------------------")
     print("              RUNNING FUNCTION                ")
     print("----------------------------------------------")
@@ -254,10 +256,8 @@ def main():
             testsuite.insertionsort([4, 8, 5, 6, 2, 10])
         elif functest==10:
             testsuite.kadanes([-2, -3, 4, -1, -2, 1, 5, -3])
-            
     else:
-
-        func(3, 5, 0)
+        func(*args)
 
     sys.settrace(None)
     sys.stdout = og
