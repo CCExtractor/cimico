@@ -17,11 +17,11 @@ def generatevid(pth):
     imgs = []
     with open(pth, 'r') as f:
         dta = json.load(f)
-    # try:
-    with open('style.yaml') as f:
-        style = yaml.load(f, Loader=yaml.FullLoader)
-    # except:
-        # style = {'introtext_time': 5, 'fps': 1, 'watermark': True, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf'.}
+    try:
+        with open('style.yaml') as f:
+            style = yaml.load(f, Loader=yaml.FullLoader)
+    except:
+        style = {'introtext_time': 5, 'fps': 1, 'watermark': False, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf', 'width': 1920, 'height': 1080}
     height = style["height"]
     width = style["width"]
     src = dta["source"].splitlines()
@@ -49,7 +49,7 @@ def generatevid(pth):
     outputtillnow = []
     oouttill = 0
     for j in range(1, len(dta["lines"])+1):
-        img = Image.new('RGB', (1920, height), color = (0, 0, 0))
+        img = Image.new('RGB', (width, height), color = (0, 0, 0))
         fnt = ImageFont.truetype(style["font_path"], fntsz)
         d = ImageDraw.Draw(img)
         if(dta["lines"][str(min(j+1, length))]["report"][10] != ""):
