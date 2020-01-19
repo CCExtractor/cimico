@@ -4,9 +4,11 @@ def main(y, x, a):
     z = x * y
     b = z + y + x + a
     print("text")
-    for i in range(10):
+    arr = [4,5,6,72,79, 3, 7, 9, 3, 34]
+    for i in range(len(arr)):
         b *= 2
         y += 1
+        print(arr[i])
     b += 1
     b -= 1
     b += 1

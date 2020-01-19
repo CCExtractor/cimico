@@ -8,3 +8,7 @@ introtext_time: 5
 watermark: True
 width: 1920
 height: 1080
+mute: ["a", "b"]
+textwrap: 100
+# pointer-array relationship. [pointer, array]
+ptr: [["i", "arr"]]
