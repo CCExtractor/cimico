@@ -4,11 +4,13 @@ import copy
 import time
 import timeit
 import importlib
-import writetojson
-import outputjson
+import importlib.util
+from . import writetojson, outputjson, generatevid, testsuite
+# import writetojson
+# import outputjson
 from inspect import isfunction, getmembers
-import generatevid
-import testsuite
+# import generatevid
+# import testsuite
 
 variablevalues = {}
 answerint = {}
@@ -186,15 +188,17 @@ def main():
                     generatevid.convertogif()
                 exit()
             print("You entered a JSON file, reporting the data...")
-            output(pth2)
+            outputjson.output(pth2)
             exit()
         if pth2.find(".py") == -1:
             print("Invalid file, breaking the program")
             exit()
         fname = input("Enter the name of the function you want to debug: ")
         pth = pth2.replace(".py", "")
-        modle = importlib.import_module(pth)
-        if(not hasattr(modle, fname)):
+        spec = importlib.util.spec_from_file_location("func", pth2)
+        foo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(foo)
+        if(not hasattr(foo, fname)):
             print("Invalid input! Either wrong function name or wrong path!")
             exit()
     args = list(input("Enter the arguments for the function (space seperated): ").split())
@@ -207,8 +211,10 @@ def main():
 
     stime = time.time()
     if(tests == False):
-        modle = importlib.import_module(pth)
-        func = getattr(modle, fname)
+        spec = importlib.util.spec_from_file_location("func", pth2)
+        foo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(foo)
+        func = getattr(foo, fname)
         writetojson.addtosource(inspect.getsource(func))
     else:
         testsuite.initiliazegraph()
@@ -311,5 +317,3 @@ def main():
     writetojson.dumpjson()
     print("Written to json file!")
 
-
-main()

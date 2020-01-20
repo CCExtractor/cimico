@@ -1,5 +1,5 @@
 fps: 1
-font_path: "fonts/hack.ttf"
+font_path: "cimico/fonts/hack.ttf"
 fontsz: 20
 introtext: "Code written by knightron0"
 # introduction time in seconds
