@@ -26,7 +26,7 @@ def generatevid(pth):
         with open(pth2style) as f:
             style = yaml.load(f, Loader=yaml.FullLoader)
     except:
-        style = {'introtext_time': 5, 'fps': 1, 'watermark': False, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'fonts/hack.ttf', 'width': 1920, 'height': 1080, 'mute': ["a", "b"],'textwrap': 100, 'ptr': [["i", "arr"]]}
+        style = {'introtext_time': 5, 'fps': 1, 'watermark': False, 'fontsz': 20, 'introtext': 'Code written by knightron0', 'font_path': 'cimico/fonts/hack.ttf', 'width': 1920, 'height': 1080, 'mute': ["a", "b"],'textwrap': 100, 'ptr': [["i", "arr"]]}
     height = style["height"]
     width = style["width"]
     ifmute = {}
@@ -49,9 +49,10 @@ def generatevid(pth):
     w, h = d.textsize(style["introtext"], font=fnt)
     d.text(((width-w)/2, (height-h)/2), style["introtext"], fill=(255,255,255), font = fnt)
     num = 1
-
+    pthtoimgsall = []
     for i in range(style["fps"]*style["introtext_time"]):
         imgnm = 'img' + str(num) + ".png"
+        pthtoimgsall.append(imgnm)
         img.save(imgnm)
         img2 = cv.imread(imgnm)
         imgs.append(img2)
@@ -59,6 +60,7 @@ def generatevid(pth):
     tms = int(height//fntsz)
     till = 0
     outputtillnow = []
+    
     oouttill = 0
     for j in range(1, len(dta["lines"])+1):
         img = Image.new('RGB', (width, height), color = (0, 0, 0))
@@ -169,6 +171,7 @@ def generatevid(pth):
             w, h = d.textsize(txt, font=fnt)
             d.text((width-w, height-h), txt, fill=(255,255,255), font = fnt)
         imgnm = 'img' + str(num) + ".png"
+        pthtoimgsall.append(imgnm)
         img.save(imgnm)
         img2 = cv.imread(imgnm)
         height, width, layers = img2.shape
@@ -184,8 +187,9 @@ def generatevid(pth):
     for i in range(len(imgs)):
         out.write(imgs[i])
     out.release()
-    for file in glob.glob("*.png"):
-        os.remove(file)
+    for i in pthtoimgsall:
+        os.remove(i)
+
     return pth2vid
     print("Path to video: " + pth2vid)
 # generatevid("data.json")

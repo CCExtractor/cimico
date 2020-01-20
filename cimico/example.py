@@ -9,7 +9,14 @@ def main(y, x, a):
         b *= 2
         y += 1
         print(arr[i])
-    b += 1
+    t = 10
+    while t > 0:
+        t -= 1
+    strval = ""
+    actualval = 0   
+    print(strval)
+    b += 5
+    c = x + y + z + b + a + t + actualval    
     b -= 1
     b += 1
     b -= 1
@@ -23,14 +30,6 @@ def main(y, x, a):
     b -= 1
     b += 1
     b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
-    b += 1
-    b -= 1
     b -= 1
     b += 1
     b -= 1
@@ -62,7 +61,7 @@ def main(y, x, a):
     b -= 1
     b += 1
     b -= 1
-    return x + y + z + b
+    return b
 
 
 def testfunction(a, b, curr):
