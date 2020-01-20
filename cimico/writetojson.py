@@ -18,8 +18,9 @@ def findata():
     data["variables"] = variables
     data["lines"] = lines
 
-def dumpjson():
-    with open('data.json', 'w') as fp:
+def dumpjson(pth):
+    pth += '/data.json'
+    with open(pth, 'w') as fp:
         json.dump(data, fp)
 
 def addtosource(srccode):

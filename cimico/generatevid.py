@@ -9,9 +9,13 @@ from moviepy.editor import *
 
 dta = {}
 
-def convertogif():
-    clip = (VideoFileClip("DebuggerVideo.avi"))
-    clip.write_gif("DebuggerVideo.gif")
+def convertogif(pth):
+    clip = (VideoFileClip(pth))
+    gifpth = ""
+    for i in range(len(pth)-3):
+        gifpth += pth[i]
+    gifpth += "gif"
+    clip.write_gif(gifpth)
 
 def generatevid(pth):
     imgs = []
@@ -171,7 +175,9 @@ def generatevid(pth):
         size = (width,height)
         imgs.append(img2)
         num += 1
-    out = cv.VideoWriter('DebuggerVideo.avi',cv.VideoWriter_fourcc(*'DIVX'), style["fps"], size)
+    pth2vid = input("Where do you want your video to be stored? ")
+    pth2vid += "/DebuggerVideo.avi"
+    out = cv.VideoWriter(pth2vid,cv.VideoWriter_fourcc(*'DIVX'), style["fps"], size)
     imglast = imgs[len(imgs)-1]
     for i in range(5):
         imgs.append(imglast)
@@ -180,6 +186,6 @@ def generatevid(pth):
     out.release()
     for file in glob.glob("*.png"):
         os.remove(file)
-    
-    print("Video Saved in this folder with name DebuggerVideo.avi")
+    return pth2vid
+    print("Path to video: " + pth2vid)
 # generatevid("data.json")

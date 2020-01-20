@@ -181,11 +181,11 @@ def main():
             inp2 = input("Do you want to generate a video? (y/n): ")
             if(inp2 == 'y'):
                 print("Generating video...")
-                generatevid.generatevid(pth2)
+                finpth = generatevid.generatevid(pth2)
                 inp3 = input("Do you want to generate a GIF file as well? (y/n)")
                 if(inp3 == "y"):
                     print("Generating GIF...")
-                    generatevid.convertogif()
+                    generatevid.convertogif(finpth)
                 exit()
             print("You entered a JSON file, reporting the data...")
             outputjson.output(pth2)
@@ -314,6 +314,7 @@ def main():
     jsndta["report"] = arr
     writetojson.addtoothers(jsndta)
     writetojson.findata()
-    writetojson.dumpjson()
+    pthtojson = input("Where do you want your JSON file to be stored? ")
+    writetojson.dumpjson(pthtojson)
     print("Written to json file!")
 
