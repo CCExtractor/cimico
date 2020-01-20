@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="cimico", 
-    version="1.0.3",
+    version="1.0.4",
     author="knightron0",
     entry_points = {
         'console_scripts': ['cimico = cimico.main:main'],
